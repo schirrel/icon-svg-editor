@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Simple online editor to svg icons">
+    <meta name="author" content="Alan - @schirrel">
+    <title>SVG Icon Editor</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="main-content">
+            <!-- Top navbar -->
+            <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+                <div class="container-fluid">
+                    <!-- Brand -->
+                    <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">SVG Icon Editor</a>
+
+                </div>
+            </nav>
+            <!-- Header -->
+            <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+                style="min-height: 200px;  background-size: cover; background-position: center top;">
+                <!-- Mask -->
+                <span class="mask bg-gradient-default opacity-8"></span>
+                <!-- Header container -->
+                <div class="container-fluid d-flex align-items-center">
+                </div>
+            </div>
+            <!-- Page content -->
+            <div class="container-fluid mt--7">
+                <div class="row">
+
+                    <div class="col-xl-12 order-xl-12">
+                        <div class="card bg-secondary shadow">
+                            <div class="card-header bg-white border-0">
+                                <div class="row align-items-center">
+                                    <div class="col-8">
+                                        <h3 class="mb-0">SVG Icon Editor</h3>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <button type="submit" data-toggle="modal" data-target="#devSettings"
+                                            class="btn btn-sm btn-primary">Opções
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="pl-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="input-username">Icone</label>
+                                                <input type="text" id="icon" v-if="!flaticon"
+                                                    class="form-control form-control-alternative" v-model="icone"
+                                                    placeholder="fa... icofont..">
+                                                <input v-if="flaticon"
+                                                    class="form-group input-md form-control col-12 col-xs-6" id="file"
+                                                    @change="loadFile" type="file" accept=".svg">
+                                            </div>
+                                        </div>
+
+                                        <fiedlset>  
+                                        <div class="col-lg-3" v-if="flaticon">
+                                            <div class="form-group">
+                                                <label class="form-control-label"
+                                                    for="input-first-name">Gradiente?</label>
+                                                <div class="custom-control custom-checkbox mb-3">
+                                                    <input class="custom-control-input" id="gradiente"
+                                                        v-model="gradiente" :disabled="!flaticon" type="checkbox"
+                                                        value="false">
+                                                    <label class="custom-control-label" for="gradiente">Sim</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="iconcolor">Cor</label>
+                                                <input type="color" class="form-control form-control-alternative"
+                                                    v-model="cor" name="iconcolor">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3" v-if="gradiente">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="iconcolor2">Cor 2</label>
+                                                <input type="color" class="form-control form-control-alternative"
+                                                    :disabled="!flaticon" v-model="cor2" name="iconcolor2">
+                                            </div>
+                                        </div>
+                                    </fiedlset>  
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8 col-md-9"></div>
+                                    <div class=" col-12 col-sm-4 col-md-3">
+                                        <button class="btn btn-primary btn-block" v-on:click="download()"
+                                            :disabled="!temIcone">Gerar Imagem</button>
+                                    </div>
+                                </div>
+
+                                </form>
+                            </div>
+
+                            <div class="pl-lg-4">
+                                <div class="row text-center">
+                                    <div class="col-lg-6">
+                                        <h2>Pre visualização</h2>
+                                        <div style="min-height: 500px">
+                                            <i v-if="!flaticon" v-bind:class="icone" id="downloadicone"
+                                                style="font-size:300px; padding:5px; " v-bind:style="{color: cor}"></i>
+                                            <div v-if="flaticon" id="svgImage">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h2>Imagem</h2>
+                                        <div v-if="!flaticon" id="img-out"></div>
+
+                                        <img v-if="flaticon" v-bind:src="imageSrc"
+                                            style="    max-width: 380px; min-width: 300px;">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="devSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLabel">Configurações para Devs</h3>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-first-name">Somente borda</label>
+                                <div class="custom-control custom-checkbox mb-3">
+                                    <input class="custom-control-input" id="somenteBorda" v-model="somenteBorda"
+                                        :disabled="!temIcone" type="checkbox" value="false">
+                                    <label class="custom-control-label" for="somenteBorda">Sim</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-first-name">Somente preenchimento</label>
+                                <div class="custom-control custom-checkbox mb-3">
+                                    <input class="custom-control-input" id="somentePreenchimento"
+                                        v-model="somentePreenchimento" :disabled="!temIcone" type="checkbox"
+                                        value="false">
+                                    <label class="custom-control-label" for="somentePreenchimento">Sim</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-first-name">Altura</label>
+                                <input type="number" id="svgAltura" class="form-control form-control-alternative"
+                                    v-model="svgAltura" placeholder="Automatico" :disabled="!temIcone">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-first-name">Largura</label>
+                                <input type="number" id="svgLargura" class="form-control form-control-alternative"
+                                    v-model="svgLargura" placeholder="Automatico" :disabled="!temIcone">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-first-name">Direção do Gradiente</label>
+                                <input type="number" id="gradienteDirecao" class="form-control form-control-alternative"
+                                    v-model="gradienteDirecao" placeholder="Automatico" :disabled="!temIcone">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+
+</html>
