@@ -1,6 +1,6 @@
 import createSvg from "./createSvg.js";
 import svgToPng from "./svgtopng.js";
-import download from "./save.js";
+import generateRandomColor from "./randomColor.js";
 
 new Vue({
   el: "#app",
@@ -10,15 +10,21 @@ new Vue({
     gradiente: false,
     imageSrc: "",
     generatedSvg: false,
-    iconFile: null,
     loading: false,
     loadingText: 'loading',
     gradienteDirection: 45,
     currentFile: null
   },
   computed: {
+    downloadFileName() {
+      const originalName = this.currentFile.name.split('.')
+      originalName.pop()
+      const originalNameWithoutExtension = originalName.join(".")
+      const filename = originalNameWithoutExtension || 'sourceFile'
+      return `svgConvertedToPng-${filename}.png`
+    },
     hasIconFile() {
-      return !!this.iconFile
+      return !!this.currentFile
     }
   },
   watch: {
@@ -38,26 +44,53 @@ new Vue({
       this.attributeColor();
     }
   },
+  mounted() {
+    this.randonizeVars()
+  },
   methods: {
+    randonizeVars() {
+      this.cor = generateRandomColor()
+      this.cor2 = generateRandomColor()
+      this.gradienteDirection = Math.floor(Math.random() * 360)
+    },
+    isSvg() {
+      const svgMimeType = "image/svg+xml"
+      const regex = new RegExp(/\.(svg)$/gm);
+      return this.currentFile.type === svgMimeType && regex.test(this.currentFile.name);
+    },
+    isValidFile() {
+      if (this.isSvg()) {
+        return true;
+      }
+      this.resetVariables()
+      alert("File must be and SVG")
+      return false
+    },
+    resetVariables() {
+      this.loading = false;
+      this.loadingText = 'Loading';
+      this.currentFile = null
+      this.$refs.sourceSvg.innerHTML = null
+    },
     loadFile() {
       this.loading = true;
       this.loadingText = 'Loading your nice svg file';
 
       setTimeout(() => {
-        const file = this.$refs.fileInput.files[0];
-        this.currentFile = file;
+        this.currentFile = this.$refs.fileInput.files[0];
+        if (!this.isValidFile()) {
+          return
+        }
+        this.randonizeVars()
         const reader = new FileReader();
-        reader.onload = (e) => {
-
-          this.iconFile = e.target.result;
-          if (file.type.indexOf("svg") > 0) {
-            document.querySelector("#svgImage").innerHTML = this.iconFile;
-            this.attributeColor();
-          }
+        reader.onload = (event) => {
+          this.$refs.sourceSvg.innerHTML = event.target.result;
+          this.attributeColor();
           this.loading = false;
           this.loadingText = 'Loading';
         };
-        reader.readAsText(file);
+
+        reader.readAsText(this.currentFile);
       }, 600)
     },
     applySvgProperties(elements, props) {
@@ -74,9 +107,7 @@ new Vue({
       const createdSvg = createSvg({ gradienteDirection: this.gradienteDirection, cor: this.cor, cor2: this.cor2 })
       const defs = createdSvg.defs
 
-      document
-        .querySelector("#svgImage")
-        .querySelector("svg")
+      this.$refs.sourceSvg.querySelector("svg")
         .appendChild(defs);
 
       setTimeout(() => {
@@ -102,17 +133,17 @@ new Vue({
     attributeColor() {
       if (this.gradiente) {
         this.attributeColorSvg();
+        return
+      }
 
-      } else {
-        let list = document.querySelectorAll("svg *");
-        for (let i = 0; i < list.length; i++) {
-          list[i].style.stroke = this.cor;
-          list[i].style.fill = this.cor;
-        }
+      let list = document.querySelectorAll("svg *");
+      for (let i = 0; i < list.length; i++) {
+        list[i].style.stroke = this.cor;
+        list[i].style.fill = this.cor;
       }
     },
     generateImage() {
-      let styledSvg = document.querySelector("#svgImage")?.querySelector("svg");
+      let styledSvg = this.$refs.sourceSvg?.querySelector("svg");
       svgToPng(styledSvg.outerHTML)
         .then((data) => {
           this.imageSrc = data;
@@ -121,12 +152,5 @@ new Vue({
     previewImage() {
       this.generateImage();
     },
-    downloadImage() {
-      const originalName = this.currentFile.name.split('.')
-      originalName.pop()
-      const originalNameWithoutExtension = originalName.join(".")
-      const filename = originalNameWithoutExtension || 'sourceFile'
-      download(this.imageSrc, `svgConvertedToPng-${filename}.png`, 'png')
-    }
   },
 });

@@ -1,13 +1,15 @@
 :root {
   --small-input-height: 31px; /* bootstrap small input height*/
+  --primary: #e589b3;
+  --secondary: #25e19d;
 }
 
-.render-container  {
+.render-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.render-container, 
+.render-container,
 .render-container * {
   max-height: 300px;
   max-width: 300px;
@@ -29,9 +31,14 @@ input[type="color"] {
   background-color: rgba(29, 13, 243, 0.404);
   font-weight: 700;
   color: white;
+}
 
- }
+.loading.modal-backdrop {
+  opacity: 1;
+}
 
- .loading.modal-backdrop  {
-   opacity: 1;
- }
+.btn:disabled {
+  opacity: 0.3;
+  pointer-events: fill;
+  cursor: not-allowed;
+}

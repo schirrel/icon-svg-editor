@@ -14,7 +14,7 @@
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
 
     <link rel="stylesheet" href="./css/style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
 </head>
 
 <body>
@@ -88,7 +88,7 @@
                 <div class="col-md-6">
                     <div class="h-100 p-3 border rounded-3">
                         <h2>SVG</h2>
-                        <div class="render-container" id="svgImage"></div>
+                        <div class="render-container" ref="sourceSvg" id="svgImage"></div>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -96,8 +96,7 @@
                         <h2>Preview</h2>
                         <img class="render-container" v-bind:src="imageSrc" />
 
-                        <button type="button" class="btn btn-link btn-sm" @click="downloadImage"
-                            v-if="imageSrc">Download</button>
+                        <a class="btn btn-link btn-sm" v-if="imageSrc" :href="imageSrc" :download="downloadFileName">Download</a>
                     </div>
                 </div>
             </div>
