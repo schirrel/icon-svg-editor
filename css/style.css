@@ -1,9 +1,15 @@
 :root {
   --small-input-height: 31px; /* bootstrap small input height*/
-  --primary: #e589b3;
-  --secondary: #25e19d;
+  --primary: #5acdfa;
+  --secondary: #f5a8b8;
+  --pink: #e589b3;
+  --green: #25e19d;
 }
 
+body {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  min-height: 100vh;
+}
 .render-container {
   display: flex;
   align-items: center;
@@ -41,4 +47,30 @@ input[type="color"] {
   opacity: 0.3;
   pointer-events: fill;
   cursor: not-allowed;
+}
+
+.card {
+  box-shadow: 2px 2px 6px rgb(0 0 0 / 30%);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  background: linear-gradient(45deg, var(--secondary), var(--primary));
+  border: none;
+  background-size: 200% 200%;
+
+}
+
+.btn-primary:hover {
+  animation: btnHover 2s ease 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes btnHover {
+  0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 100% 50%;
+	}
 }

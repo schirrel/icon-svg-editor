@@ -1,6 +1,7 @@
 import createSvg from "./createSvg.js";
 import svgToPng from "./svgtopng.js";
 import generateRandomColor from "./randomColor.js";
+import register from './analytics.js'
 
 new Vue({
   el: "#app",
@@ -45,13 +46,13 @@ new Vue({
     }
   },
   mounted() {
-    this.randonizeVars()
+    this.randonizeVars();
   },
   methods: {
     randonizeVars() {
-      this.cor = generateRandomColor()
-      this.cor2 = generateRandomColor()
-      this.gradienteDirection = Math.floor(Math.random() * 360)
+      this.cor = generateRandomColor();
+      this.cor2 = generateRandomColor();
+      this.gradienteDirection = Math.floor(Math.random() * 360);
     },
     isSvg() {
       const svgMimeType = "image/svg+xml"
@@ -62,15 +63,15 @@ new Vue({
       if (this.isSvg()) {
         return true;
       }
-      this.resetVariables()
-      alert("File must be and SVG")
-      return false
+      this.resetVariables();
+      alert("File must be and SVG");
+      return false;
     },
     resetVariables() {
       this.loading = false;
       this.loadingText = 'Loading';
-      this.currentFile = null
-      this.$refs.sourceSvg.innerHTML = null
+      this.currentFile = null;
+      this.$refs.sourceSvg.innerHTML = null;
     },
     loadFile() {
       this.loading = true;
@@ -79,9 +80,12 @@ new Vue({
       setTimeout(() => {
         this.currentFile = this.$refs.fileInput.files[0];
         if (!this.isValidFile()) {
+          register('File', 'Load', 'Error');
           return
         }
-        this.randonizeVars()
+        register('File', 'Load', 'Success');
+
+        this.randonizeVars();
         const reader = new FileReader();
         reader.onload = (event) => {
           this.$refs.sourceSvg.innerHTML = event.target.result;
@@ -103,9 +107,9 @@ new Vue({
     attributeColorSvg() {
       let currentDefs = document.querySelector("defs");
       currentDefs?.parentNode.removeChild(currentDefs);
-      this.gradienteDirection = Number(this.gradienteDirection)
-      const createdSvg = createSvg({ gradienteDirection: this.gradienteDirection, cor: this.cor, cor2: this.cor2 })
-      const defs = createdSvg.defs
+      this.gradienteDirection = Number(this.gradienteDirection);
+      const createdSvg = createSvg({ gradienteDirection: this.gradienteDirection, cor: this.cor, cor2: this.cor2 });
+      const defs = createdSvg.defs;
 
       this.$refs.sourceSvg.querySelector("svg")
         .appendChild(defs);
@@ -114,19 +118,19 @@ new Vue({
         this.applySvgProperties(document.querySelectorAll("path"), [
           ["fill", "rgba(0,0,0,0)"],
           ["stroke", "url(#gradient) " + this.cor2]
-        ])
+        ]);
         this.applySvgProperties(document.querySelectorAll("rect"), [
           ["fill", "rgba(0,0,0,0)"],
           ["stroke", "url(#gradient) " + this.cor2]
-        ])
+        ]);
         this.applySvgProperties(document.querySelectorAll("path"), [
           ["fill", "url(#gradient) " + this.cor,],
           ["stroke", "rgba(0,0,0,0)"]
-        ])
+        ]);
         this.applySvgProperties(document.querySelectorAll("rect"), [
           ["fill", "url(#gradient) " + this.cor,],
           ["stroke", "rgba(0,0,0,0)"]
-        ])
+        ]);
 
       }, 500);
     },
@@ -142,15 +146,26 @@ new Vue({
         list[i].style.fill = this.cor;
       }
     },
-    generateImage() {
+    previewImage() {
+      register('Preview', 'Click', 'Generate Preview');
       let styledSvg = this.$refs.sourceSvg?.querySelector("svg");
       svgToPng(styledSvg.outerHTML)
         .then((data) => {
           this.imageSrc = data;
-        })
+        });
     },
-    previewImage() {
-      this.generateImage();
-    },
+    downloadFile() {
+      register('Preview', 'Click', 'Download Preview');
+
+    }
   },
 });
+
+
+window.onerror = function (message, source, lineno, colno, error) {
+  gtag("event", "exception", {
+    error: JSON.stringify(error),
+    source: source,
+    description: message,
+  });
+}
