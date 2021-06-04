@@ -10,11 +10,13 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-72YCL5E18Q"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+        if (!window.location.port) {
+            gtag('js', new Date());
+            gtag('config', 'G-72YCL5E18Q');
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
 
-        gtag('config', 'G-72YCL5E18Q');
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
@@ -103,7 +105,7 @@
                 <div class="col-md-6">
                     <div class="h-300 p-3 border rounded-3 card">
                         <h2>Preview</h2>
-                        <img class="render-container" v-bind:src="imageSrc" />
+                        <canvas class="canvas-container" ></canvas>
 
                         <a @click="downloadFile" class="btn btn-primary btn-sm" v-if="imageSrc" :href="imageSrc"
                             :download="downloadFileName">Download</a>

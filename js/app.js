@@ -57,7 +57,7 @@ new Vue({
     isSvg() {
       const svgMimeType = "image/svg+xml"
       const regex = new RegExp(/\.(svg)$/gm);
-      return this.currentFile.type === svgMimeType && regex.test(this.currentFile.name);
+      return this.currentFile && this.currentFile.type === svgMimeType && regex.test(this.currentFile.name);
     },
     isValidFile() {
       if (this.isSvg()) {
@@ -149,7 +149,7 @@ new Vue({
     previewImage() {
       register('Preview', 'Click', 'Generate Preview');
       let styledSvg = this.$refs.sourceSvg?.querySelector("svg");
-      svgToPng(styledSvg.outerHTML)
+      svgToPng(styledSvg)
         .then((data) => {
           this.imageSrc = data;
         });

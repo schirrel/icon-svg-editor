@@ -4,6 +4,8 @@
   --secondary: #f5a8b8;
   --pink: #e589b3;
   --green: #25e19d;
+  --mh: 300px;
+  --mw: 300px;
 }
 
 body {
@@ -17,11 +19,18 @@ body {
 }
 .render-container,
 .render-container * {
-  max-height: 300px;
-  max-width: 300px;
+  max-height: var(--mh);
+  max-width: var(--mw);
   min-height: 100px;
   margin: 0;
   padding: 0;
+}
+
+.canvas-container {
+  max-height: var(--mh);
+  max-width: var(--mw);
+  object-fit: contain;
+  margin: auto;
 }
 
 input[type="color"] {
