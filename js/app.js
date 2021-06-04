@@ -30,19 +30,19 @@ new Vue({
   },
   watch: {
     cor() {
-      this.attributeColor();
+      this.setDefinedColor();
     },
 
     cor2() {
       if (this.gradiente) {
-        this.attributeColor();
+        this.setDefinedColor();
       }
     },
     gradiente() {
-      this.attributeColor();
+      this.setDefinedColor();
     },
     gradienteDirection() {
-      this.attributeColor();
+      this.setDefinedColor();
     }
   },
   mounted() {
@@ -89,7 +89,7 @@ new Vue({
         const reader = new FileReader();
         reader.onload = (event) => {
           this.$refs.sourceSvg.innerHTML = event.target.result;
-          this.attributeColor();
+          this.setDefinedColor();
           this.loading = false;
           this.loadingText = 'Loading';
         };
@@ -111,36 +111,25 @@ new Vue({
       const createdSvg = createSvg({ gradienteDirection: this.gradienteDirection, cor: this.cor, cor2: this.cor2 });
       const defs = createdSvg.defs;
 
-      this.$refs.sourceSvg.querySelector("svg")
+      this.$refs.sourceSvg.children[0]
         .appendChild(defs);
 
       setTimeout(() => {
-        this.applySvgProperties(document.querySelectorAll("path"), [
-          ["fill", "rgba(0,0,0,0)"],
+        this.applySvgProperties(this.$refs.sourceSvg.children[0].children, [
+          ["fill", "url(#gradient) " + this.cor,],
           ["stroke", "url(#gradient) " + this.cor2]
         ]);
-        this.applySvgProperties(document.querySelectorAll("rect"), [
-          ["fill", "rgba(0,0,0,0)"],
-          ["stroke", "url(#gradient) " + this.cor2]
-        ]);
-        this.applySvgProperties(document.querySelectorAll("path"), [
-          ["fill", "url(#gradient) " + this.cor,],
-          ["stroke", "rgba(0,0,0,0)"]
-        ]);
-        this.applySvgProperties(document.querySelectorAll("rect"), [
-          ["fill", "url(#gradient) " + this.cor,],
-          ["stroke", "rgba(0,0,0,0)"]
-        ]);
-
-      }, 500);
+      })
     },
-    attributeColor() {
+    setDefinedColor() {
+      if(!this.hasIconFile) return; 
+      
       if (this.gradiente) {
         this.attributeColorSvg();
         return
       }
-
-      let list = document.querySelectorAll("svg *");
+      const svgEl = this.$refs.sourceSvg.children[0]
+      let list = Array.from(svgEl.children)
       for (let i = 0; i < list.length; i++) {
         list[i].style.stroke = this.cor;
         list[i].style.fill = this.cor;
@@ -148,7 +137,7 @@ new Vue({
     },
     previewImage() {
       register('Preview', 'Click', 'Generate Preview');
-      let styledSvg = this.$refs.sourceSvg?.querySelector("svg");
+      let styledSvg = this.$refs.sourceSvg?.children[0];
       svgToPng(styledSvg)
         .then((data) => {
           this.imageSrc = data;
@@ -162,10 +151,3 @@ new Vue({
 });
 
 
-window.onerror = function (message, source, lineno, colno, error) {
-  gtag("event", "exception", {
-    error: JSON.stringify(error),
-    source: source,
-    description: message,
-  });
-}
