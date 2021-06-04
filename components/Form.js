@@ -1,43 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Simple online editor to svg icons" />
-    <meta name="author" content="Alan - @schirrel" />
-    <title>SVG Icon Editor</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-72YCL5E18Q"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+export default Vue.component("Form", {
+    data: function () {
+        return {
 
-        gtag('config', 'G-72YCL5E18Q');
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-        crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
-
-    <link rel="stylesheet" href="./css/style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
-</head>
-
-<body>
-    <main id="app">
-        <div v-if="loading" class="loading modal-backdrop fade show" tabbindex="-1">
-            <div class="spinner-border text-light" role="status">
-            </div>
-            <span>{{loadingText}}...</span>
-        </div>
-        <div class="container py-4">
-            <header class="pb-1 mb-4 border-bottom">
-                <span class="fs-4">SVG Icon Editor</span>
-            </header>
-
-            <div class="p-3 mb-3 card rounded-3">
+        };
+    },
+    created: function () {
+    },
+    methods: {
+    },
+    template: `
+    <div class="p-3 mb-3 card rounded-3">
                 <div class="container-fluid">
                     <div class="mb-3">
                         <input ref="fileInput" class="form-control" id="file" @change="loadFile" type="file"
@@ -90,24 +62,5 @@
                     </div>
                 </div>
             </div>
-
-            <div class="row align-items-md-stretch">
-                <div class="col-md-6">
-                    <div class="h-100 p-3 border rounded-3 card">
-                        <h2>SVG</h2>
-                        <div class="render-container" ref="sourceSvg" id="svgImage"></div>
-                    </div>
-                </div>
-            </div>
-
-            <footer class="pt-3 mt-4 text-muted border-top d-flex justify-content-between">
-                <span> <a class="btn btn-light btn-sm" href="https://github.com/schirrel">@schirrel</a></span>
-                <a class="btn btn-sm btn-dark" href="https://github.com/schirrel/icon-svg-editor">GitHub</a>
-            </footer>
-        </div>
-    </main>
-    <script type="module" src="js/app.js"></script>
-
-</body>
-
-</html>
+  `
+});
