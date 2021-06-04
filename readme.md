@@ -1,6 +1,15 @@
+
+
 # WIP
 
 This is a working in progress
+
+# How to Use
+Access https://schirrel.dev/icon-svg-editor/
+
+Checkout the example: 
+
+![exemplo](https://user-images.githubusercontent.com/6757777/120193326-a76b3700-c1f2-11eb-9bb4-bed2fa5dd624.gif)
 
 
 
