@@ -18,7 +18,8 @@ var urlsToCache = [
   "./mstile-310x150.png",
   "./mstile-310x310.png",
   "./mstile-70x70.png",
-  "./safari-pinned-tab.svg"
+  "./safari-pinned-tab.svg",
+  "./maskable_icon_x192.png"
 ];
 
 self.addEventListener("install", function (event) {
